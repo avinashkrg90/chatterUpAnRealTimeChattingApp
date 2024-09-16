@@ -33,9 +33,52 @@ complete the script tag code. -->
             width: 100%;
             min-height: 85vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             font-size: 16px;
+        }
+
+        #loginProfilePic{
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        #loginProfilePic input{
+            width: 6vh;
+            height: 6vh;
+            border-radius: 50%;
+            position:absolute;
+            bottom: 1vh;
+            right: 4.5vh;
+            opacity: 0;
+            border: 2px solid black;
+        }
+
+        #loginProfilePic label{
+            position:absolute;
+            bottom: 1vh;
+            right: 4.5vh;
+            color: black;
+            font-size: 30px;
+            margin: 0;
+            background-color: rgb(255, 255, 255, 0.5);
+            width: 6vh;
+            height: 6vh;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 55px;
+        }
+
+        #loginProfilePic input:hover{
+            cursor: pointer;
+        }
+
+
+        #loginProfilePic img{
+            width: 15vh;
+            height: 15vh;
+            border-radius: 50%;
         }
 
         #login-form {
@@ -220,6 +263,12 @@ complete the script tag code. -->
     <div id="container">
         <div id="chatterUp-app">
             <div id="login-container">
+                <div id="loginProfilePic">
+                    <img id="loginImg" src="./public/profilePics/pp1.jpg" alt="no image found">
+                    <label for="picInput">+</label>
+                    <input id="picInput" type="file" onChange="selectFile()"  accept="image/png, image/jpeg">
+                    <!-- <button id="addPicBtn"><h3>+</h3></button> -->
+                </div>
                 <form id="login-form">
                     <label for="username-input">Username</label>
                     <input type="text" id="username-input" placeholder="Please enter your name" required>
@@ -250,11 +299,6 @@ complete the script tag code. -->
                                 seeing you
                             </div>
                         </div> -->
-                        <!-- <div class="outMessage-container">
-                            <div class="profilePic"><img src="./public/profilePics/pp1.jpg" alt="ProfilePic1"></div>
-                            <div class="outMessage">Hello, Hi
-                            </div>
-                        </div> -->
                     </div>
                 </div>
                 <div id="messageForm-area">
@@ -272,6 +316,15 @@ complete the script tag code. -->
     <script>
         const socket = io.connect('http://localhost:3100');
 
+        let file = '';
+        const imgDiv = document.getElementById("loginImg");
+
+        function selectFile(){
+            console.log(document.getElementById("picInput").files[0].name);
+            file = document.getElementById("picInput").files[0];
+            imgDiv.src = URL.createObjectURL(file);
+        }
+
         let username = '';
         let room = '';
         const loginContainer = document.getElementById("login-container");
@@ -288,7 +341,8 @@ complete the script tag code. -->
             loginContainer.style.display = 'none';
             chatContainer.style.display = 'flex';
             // Join the room by emitting a 'join' event
-            console.log("username: " + username +"  and room id is : "+ room)
+            // console.log("username: " + username +"  and room id is : "+ room)
+            // socket.emit('profilePicUpdate', {file, username})
             socket.emit('join', {username, room});
         });
 
@@ -302,7 +356,7 @@ complete the script tag code. -->
             messageOut.classList.add(`outMessage-container`);
             messageOut.innerHTML =
                 `
-                    <div class="profilePic"><img src="./public/profilePics/pp1.jpg" alt="ProfilePic1"></div>
+                    <div class="profilePic"><img src="${URL.createObjectURL(file)}" alt="ProfilePic1"></div>
                     <div class="outMessage">${msg.text}</div>
                 `;
             messageList.appendChild(messageOut);

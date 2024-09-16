@@ -6,6 +6,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import { messageModel } from './message.schema.js';
+import { onlineUserModel } from './onlineUsers.js';
 
 export const app = express();
 app.use(cors());
@@ -37,16 +38,25 @@ io.on("connection", (socket) => {
 
         socket.username = data.username;
         //send old messages to the client
-        try{
-            const oldMessages = await messageModel.find().sort({timestamp:1}).limit(50);
+        
+        const newUser = new onlineUserModel({
+            username:data.username,
+            room:data.room,
+        })
+        await newUser.save();
+
+        try {
+            const oldMessages = await messageModel.find().sort({ timestamp: 1 }).limit(50);
             // console.log(messages);
             socket.emit('previousMessages', oldMessages)
-        }catch(err){
+        } catch (err) {
             console.log(err)
         }
+
+        // console.log(data.file)
     });
 
-    socket.on("sendMsg", async ({msg, room}) => {
+    socket.on("sendMsg", async ({ msg, room }) => {
 
         const message = new messageModel({
             username: socket.username,
@@ -60,7 +70,8 @@ io.on("connection", (socket) => {
         socket.to(room).emit("message", message);
     });
 
-    socket.on("disconnect", () => {
+    socket.on("disconnect", async () => {
+        await onlineUserModel.findOneAndDelete({username:socket.username});
         console.log("Connection disconnected.");
     });
 });
