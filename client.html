@@ -356,7 +356,7 @@ complete the script tag code. -->
             messageOut.classList.add(`outMessage-container`);
             messageOut.innerHTML =
                 `
-                    <div class="profilePic"><img src="${URL.createObjectURL(file)}" alt="ProfilePic1"></div>
+                    <div class="profilePic"><img src="${file ? URL.createObjectURL(file): './public/profilePics/pp1.jpg'}" alt="ProfilePic1"></div>
                     <div class="outMessage">${msg.text}</div>
                 `;
             messageList.appendChild(messageOut);
@@ -394,6 +394,11 @@ complete the script tag code. -->
             });
         });
 
+        socket.on('listOfOnlineUsers', (onlineUsers)=>{
+            onlineUsers.forEach(user =>{
+                console.log(user.username);
+            })
+        })
     </script>
 </body>
 

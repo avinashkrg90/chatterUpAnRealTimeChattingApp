@@ -44,6 +44,9 @@ io.on("connection", (socket) => {
             room:data.room,
         })
         await newUser.save();
+        const onlineUsersInRoom = await onlineUserModel.find({room:data.room});
+        // console.log(onlineUsersInRoom);
+        io.to(data.room).emit("listOfOnlineUsers", onlineUsersInRoom);
 
         try {
             const oldMessages = await messageModel.find().sort({ timestamp: 1 }).limit(50);
@@ -71,7 +74,16 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", async () => {
+        const leavedUser = await onlineUserModel.findOne({username:socket.username});
+        console.log(leavedUser)
+        let room = '';
+        if (leavedUser)
+            room = leavedUser.room;
+        console.log(room)
         await onlineUserModel.findOneAndDelete({username:socket.username});
+        const onlineUsersInRoom = await onlineUserModel.find({room});
+        console.log(onlineUsersInRoom);
+        io.to(room).emit("listOfOnlineUsers", onlineUsersInRoom);
         console.log("Connection disconnected.");
     });
 });
