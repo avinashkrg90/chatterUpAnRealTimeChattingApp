@@ -1,0 +1,346 @@
+<!-- no need to change the prewritten code.
+complete the script tag code. -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Task Management App</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        #container {
+            width: 100vw;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #153677, #4e085f);
+            padding: 10px;
+        }
+
+        #chatterUp-app {
+            width: 100%;
+            max-width: 650px;
+            min-height: 85vh;
+            background: #f8effd;
+            margin: 50px auto 50px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        #login-container {
+            width: 100%;
+            min-height: 85vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        #login-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #login-form input {
+            margin-bottom: 25px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid grey;
+        }
+
+        #login-form label {
+            margin-bottom: 5px;
+        }
+
+        #login-form button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 10px;
+            background-color: #59156a;
+            color: white;
+        }
+
+        #login-form button:hover {
+            background-color: #732287;
+            cursor: pointer;
+        }
+
+        /******************************************************************************************************/
+
+        #main-container {
+            width: 100%;
+            height: 85vh;
+            display: none;
+            /* display: flex; shall be done using javascript after the user is logged in */
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #header {
+            height: 8vh;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 20px;
+            border-radius: 10px 10px 0 0;
+            color: white;
+            background: linear-gradient(180deg, #f88484, #ee780a);
+        }
+
+        #notificationDiv {
+            color: #b90d1b;
+            font-weight: 200;
+            line-height: 18px;
+            font-size: 18px;
+        }
+
+        #message-container {
+            /* border: 1px solid rgb(224, 222, 222); */
+            height: 70vh;
+            overflow-y: auto;
+            /* overflow-anchor: none; */
+            -ms-overflow-style: none;
+            scrollbar-width: none; 
+            /* scroll-snap-align: end; */
+        }
+
+        #message-area {
+            display: flex;
+            flex-direction:column;
+            justify-content: flex-end;
+            padding: 0px 15px;
+            /* scroll-snap-align: end; */
+        }
+
+        #messageForm-area {
+            padding: 10px 15px 15px 15px;
+            width: 100%;
+        }
+
+        #sendMessage-form {
+            width: 100%;
+            margin-bottom: 0px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #sendMessage-form input {
+            width: 100%;
+            outline: none;
+            font-size: 15px;
+            padding: 11px;
+            border: 2px solid #d7d6d6;
+            margin-bottom: 3px;
+            border-radius: 10px;
+        }
+
+        #sendMessage-form button {
+            width: 17%;
+            outline: none;
+            font-size: 15px;
+            padding: 11px;
+            border: 2px solid #7745f5;
+            margin-bottom: 3px;
+            background-color: #9e7af8;
+            border-radius: 10px;
+        }
+
+        #sendMessage-form button:hover {
+            outline: none;
+            font-size: 15px;
+            padding: 11px;
+            border: 2px solid #7745f5;
+            margin-bottom: 3px;
+            background-color: #c1adf3;
+            cursor: pointer;
+        }
+
+        .inMessage-container {
+            font-size: 18px;
+            width: 80%;
+            display: flex;
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 22px;
+        }
+
+        .inMessage {
+            width: auto;
+            margin-left: 5px;
+            padding: 10px;
+            background: linear-gradient(-90deg, #d2a4f8, #feafe5);
+            border-radius: 0px 15px 15px 15px;
+            word-wrap: break-word;
+        }
+
+        .outMessage-container {
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 22px;
+            width: 80%;
+            display: flex;
+            margin-top: 15px;
+            flex-direction: row-reverse;
+            align-self: flex-end;
+        }
+
+        .outMessage {
+            width: auto;
+            margin-right: 5px;
+            padding: 10px;
+            background: linear-gradient(-90deg, #feb4b4, #faf88d);
+            border-radius: 15px 0px 15px 15px;
+            word-wrap: break-word;
+        }
+
+        .profilePic {
+            height: 45px;
+            width: 45px;
+            border-radius: 50%;
+            box-shadow: 0px 5px 5px rgb(121, 122, 122);
+        }
+
+        .profilePic img{
+            height: 45px;
+            width: 45px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="chatterUp-app">
+            <div id="login-container">
+                <form id="login-form">
+                    <label for="username-input">Username</label>
+                    <input type="text" id="username-input" placeholder="Please enter your name" required>
+                    <label for="room-input">Chat room ID</label>
+                    <input type="text" id="room-input" placeholder="Enter the chat room id " required>
+                    <button id="login-btn" type="submit">Join</button>
+                </form>
+            </div>
+            <div id="main-container">
+                <div id="header">
+                    <h2>ChatterUp</h2>
+                    <div id="notificationDiv">
+                        <h4>4 users online</h4>
+                    </div>
+                </div>
+
+                <div id="message-container">
+                    <div id="message-area">
+                        
+                        <!-- <div class="inMessage-container">
+                            <div class="profilePic"><img src="./public/profilePics/pp2.jpg" alt="ProfilePic2"></div>
+                            <div class="inMessage">Hello, Hi.... HOw you</div>
+                        </div>
+                        <div class="outMessage-container">
+                            <div class="profilePic"><img src="./public/profilePics/pp1.jpg" alt="ProfilePic1"></div>
+                            <div class="outMessage">Hello, Hi.... HOw are you HOw are you man. Itsu. Hello, Hi.... HOw are
+                                you man. Its been long seeiman. Itsu. Hello, Hi.... HOw are you man. Its been long
+                                seeing you
+                            </div>
+                        </div> -->
+                        <!-- <div class="outMessage-container">
+                            <div class="profilePic"><img src="./public/profilePics/pp1.jpg" alt="ProfilePic1"></div>
+                            <div class="outMessage">Hello, Hi
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <div id="messageForm-area">
+                    <!-- Create a form to add new tasks -->
+                    <form id="sendMessage-form">
+                        <input type="text" id="message-input" placeholder="enter your message" required>
+                        <button id="sendMessage-btn" type="submit">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://localhost:3100/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io.connect('http://localhost:3100');
+
+        let username = '';
+        let room = '';
+        const loginContainer = document.getElementById("login-container");
+        const chatContainer = document.getElementById("main-container");
+
+        // Event handler for the login form
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Get the username and room from the form
+            username = document.getElementById('username-input').value;
+            room = document.getElementById('room-input').value;
+
+            // Hide the login container and show the chat container
+            loginContainer.style.display = 'none';
+            chatContainer.style.display = 'flex';
+            // Join the room by emitting a 'join' event
+            console.log("username: " + username +"  and room id is : "+ room)
+            socket.emit('join', {username, room});
+        });
+
+        // -------------------write your code here.--------------------
+        const messageInput = document.getElementById("message-input");
+        const messageList = document.getElementById("message-area");
+        const sendMessageForm = document.getElementById("sendMessage-form")
+
+        function addOutMsg(msg) {
+            let messageOut = document.createElement('div');
+            messageOut.classList.add(`outMessage-container`);
+            messageOut.innerHTML =
+                `
+                    <div class="profilePic"><img src="./public/profilePics/pp1.jpg" alt="ProfilePic1"></div>
+                    <div class="outMessage">${msg.text}</div>
+                `;
+            messageList.appendChild(messageOut);
+        }
+
+        function addInMsg(msg) {
+            let messageIn = document.createElement('div');
+            messageIn.classList.add(`inMessage-container`);
+            messageIn.innerHTML =
+                `
+                    <div class="profilePic"><img src="./public/profilePics/pp2.jpg" alt="ProfilePic1"></div>
+                    <div class="inMessage">${msg.text}</div>
+                `;
+            messageList.appendChild(messageIn);
+        }
+
+        sendMessageForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const msg = messageInput.value;
+            socket.emit('sendMsg', {msg, room});
+            messageInput.value = '';
+            addOutMsg({username, text:msg, room, timeStamp:Date.now});
+        });
+
+        socket.on('message', (message) => {
+            addInMsg(message);
+        });
+
+        socket.on('previousMessages', (messages) => {
+            messages.forEach(message => {
+                if (message.username == username)
+                    addOutMsg(message);
+                else
+                    addInMsg(message);
+            });
+        });
+
+    </script>
+</body>
+
+</html>

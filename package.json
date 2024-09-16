@@ -1,0 +1,31 @@
+{
+  "name": "chatterup",
+  "version": "1.0.0",
+  "description": "chatter up application using socket.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js",
+    "start": "node index.js",
+    "devStart": "nodemon index.js"
+  },
+  "type": "module",
+  "keywords": [
+    "nodeJS",
+    "ExpressJS",
+    "MongoDb",
+    "Socket.io"
+  ],
+  "author": "Avinash Kumar Gupta",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "http": "^0.0.1-security",
+    "mongoose": "^8.6.2",
+    "socket.io": "^4.7.5"
+  }
+}
