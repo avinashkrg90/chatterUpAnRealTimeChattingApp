@@ -24,7 +24,7 @@ complete the script tag code. -->
             max-width: 800px;
             min-height: 85vh;
             background: #f8effd;
-            margin: 20px auto 50px;
+            margin: 30px auto 50px;
             border-radius: 10px;
             position: relative;
         }
@@ -136,65 +136,62 @@ complete the script tag code. -->
             background: linear-gradient(180deg, #f88484, #ee780a);
         }
 
-        /* #headerProfilePic{
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-        } */
+        #header span {
+            font-size: 14px;
+            color: #544085;
+            margin-left: 10px;
+        }
 
-        #headerProfilePic img{
+        #headerProfilePic img {
             width: 7vh;
             height: 7vh;
             border-radius: 50%;
         }
 
-        #msgAndUsers-container{
+        #msgAndUsers-container {
             display: flex;
             justify-content: space-between;
         }
 
         #message-container {
-            /* border: 1px solid rgb(224, 222, 222); */
             height: 70vh;
             overflow-y: auto;
-            /* overflow-anchor: none; */
             -ms-overflow-style: none;
             scrollbar-width: none;
-            /* scroll-snap-align: end; */
-            /* display: flex; */
             justify-content: space-between;
-            box-shadow: inset #b9a5eb 00px -20px 50px -15px; 
+            box-shadow: inset #b9a5eb 00px -20px 50px -15px;
         }
 
         #onlineUsers-container {
             width: 200px;
             border-left: 2px solid #b9a5eb;
-            box-shadow: inset #b9a5eb 20px 00px 50px -15px; 
+            box-shadow: inset #b9a5eb 20px 00px 50px -15px;
             padding: 5px 15px;
         }
 
-        #headerOnlineUsers{
-            color:#59156a;
+        #headerOnlineUsers {
+            color: #59156a;
             font-size: 16px;
             padding: 5px 15px;
         }
 
-        #headerOnlineUsers p span{
-            color:#000000;
+        #headerOnlineUsers p span {
+            color: #000000;
             font-size: 16px;
         }
+
         /* noOfOnlineUsers */
 
-        #listOfOnlineUsers{
+        #listOfOnlineUsers {
             display: flex;
             flex-direction: column;
         }
 
-        #listOfOnlineUsers div{
+        #listOfOnlineUsers div {
             font-size: 15px;
         }
 
-        #listOfOnlineUsers div::before{
+        #listOfOnlineUsers div::before {
             content: '';
             transform: translateY(10%);
             width: 15px;
@@ -205,7 +202,7 @@ complete the script tag code. -->
             margin-right: 5px;
         }
 
-        .loginSinceTime{
+        .loginSinceTime {
             color: rgb(60, 120, 122);
             font-size: 12px;
             margin-left: 5px;
@@ -223,6 +220,23 @@ complete the script tag code. -->
         #messageForm-area {
             padding: 10px 15px 15px 15px;
             width: 100%;
+        }
+
+        .notificationDiv {
+            color: #ee780a;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .messageSendDetails {
+            font-size: 12px;
+            color: darkolivegreen;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .messageSenderUsername {
+            margin-right: 5px;
         }
 
         #sendMessage-form {
@@ -304,15 +318,15 @@ complete the script tag code. -->
         }
 
         .profilePic {
-            height: 45px;
-            width: 45px;
+            height: 40px;
+            width: 40px;
             border-radius: 50%;
             box-shadow: 0px 5px 5px rgb(121, 122, 122);
         }
 
         .profilePic img {
-            height: 45px;
-            width: 45px;
+            height: 40px;
+            width: 40px;
             border-radius: 50%;
         }
     </style>
@@ -339,7 +353,7 @@ complete the script tag code. -->
             <div id="main-container">
                 <div>
                     <div id="header">
-                        <h2>ChatterUp</h2>
+                        <h2>ChatterUp <span id="typingStatus"></span></h2>
                         <div id="headerProfilePic">
                             <img id="headerPicImg" src="./public/profilePics/pp1.jpg" alt="no image found">
                         </div>
@@ -369,13 +383,14 @@ complete the script tag code. -->
                             <div id="listOfOnlineUsers">
                                 <div>Aviansh <span class="loginSinceTime">(since 4h30m)</span></div>
                             </div>
-                            
+
                         </div>
                     </div>
                     <div id="messageForm-area">
                         <!-- Create a form to add new tasks -->
                         <form id="sendMessage-form">
-                            <input type="text" id="message-input" placeholder="enter your message" required>
+                            <input type="text" id="message-input" placeholder="enter your message"
+                                onkeyup="userTyping(event)" required>
                             <button id="sendMessage-btn" type="submit">Send</button>
                         </form>
                     </div>
@@ -413,10 +428,7 @@ complete the script tag code. -->
             // Hide the login container and show the chat container
             loginContainer.style.display = 'none';
             chatContainer.style.display = 'flex';
-            // Join the room by emitting a 'join' event
-            // console.log("username: " + username +"  and room id is : "+ room)
-            // socket.emit('profilePicUpdate', {file, username})
-            if(file)
+            if (file)
                 headerProfilePic.src = URL.createObjectURL(file);
             socket.emit('join', { username, room });
         });
@@ -425,54 +437,118 @@ complete the script tag code. -->
         const messageInput = document.getElementById("message-input");
         const messageList = document.getElementById("message-area");
         const sendMessageForm = document.getElementById("sendMessage-form")
+        const messageContainer = document.getElementById("message-container");
+
+        function userTyping(event) {
+            const key = event.key;
+            if (key == "Backspace") {
+                if (messageInput.value == ''){
+                    socket.emit('typingStopped', { username, room });
+                }
+            }
+            else if (key != "Enter")
+                socket.emit('typing', { username, room });
+        }
+
+        function showNotification(text) {
+            let notificationBox = document.createElement('div');
+            notificationBox.classList.add(`notificationDiv`);
+            notificationBox.innerHTML = text;
+            messageList.appendChild(notificationBox);
+            scrollToBottom();
+        }
 
         function addOutMsg(msg) {
+            const now = new Date(msg.timestamp);
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
             let messageOut = document.createElement('div');
             messageOut.classList.add(`outMessage-container`);
             messageOut.innerHTML =
                 `
                     <div class="profilePic"><img src="${file ? URL.createObjectURL(file) : './public/profilePics/pp1.jpg'}" alt="ProfilePic1"></div>
-                    <div class="outMessage">${msg.text}</div>
+                    <div class="outMessage">
+                        <div class="messageSendDetails">
+                            <div class="messageSenderUsername">You</div>
+                            <div class="messageSendTime">${hours}:${minutes}</div>
+                        </div>
+                        <div>${msg.text}</div>
+                    </div>
                 `;
             messageList.appendChild(messageOut);
+            scrollToBottom();
         }
 
         function addInMsg(msg) {
+            const now = new Date(msg.timestamp);
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
             let messageIn = document.createElement('div');
             messageIn.classList.add(`inMessage-container`);
             messageIn.innerHTML =
                 `
                     <div class="profilePic"><img src="./public/profilePics/pp2.jpg" alt="ProfilePic1"></div>
-                    <div class="inMessage">${msg.text}</div>
+                    <div class="inMessage">
+                        <div class="messageSendDetails">
+                            <div class="messageSenderUsername">${msg.username}</div>
+                            <div class="messageSendTime">${hours}:${minutes}</div>
+                        </div>
+                        <div>${msg.text}</div>
+                    </div>
                 `;
             messageList.appendChild(messageIn);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            // get the scroll height of the window
+            const scrollHeight = messageList.scrollHeight;
+            // scroll to the bottom of webpage
+            messageContainer.scrollTo(0, scrollHeight);
         }
 
         let onlineUsersDiv = document.getElementById("listOfOnlineUsers");
         let noOfOnlineUsersSpace = document.getElementById("noOfOnlineUsers");
-    
+
         function showOnlineUser(onlineUserData) {
-            console.log(onlineUserData)
             const now = new Date(onlineUserData.joinedSince);
             const hours = now.getHours();
             const minutes = now.getMinutes();
-            console.log(hours+ ":"+minutes)
             let onlineUser = document.createElement('div');
-            onlineUser.innerHTML = `${onlineUserData.username} <span class="loginSinceTime">(since ${hours}:${minutes})</span>`;
+            if (onlineUserData.username == username)
+                onlineUser.innerHTML = `You <span class="loginSinceTime">(since ${hours}:${minutes})</span>`;
+            else
+                onlineUser.innerHTML = `${onlineUserData.username} <span class="loginSinceTime">(since ${hours}:${minutes})</span>`;
             onlineUsersDiv.appendChild(onlineUser);
         }
 
         sendMessageForm.addEventListener('submit', (event) => {
             event.preventDefault();
             const msg = messageInput.value;
+            socket.emit('typingStopped', { username, room });
             socket.emit('sendMsg', { msg, room });
             messageInput.value = '';
-            addOutMsg({ username, text: msg, room, timeStamp: Date.now });
+            addOutMsg({ username, text: msg, room, timestamp: Date.now() });
         });
 
         socket.on('message', (message) => {
             addInMsg(message);
         });
+
+        socket.on('notification', (text) => {
+            showNotification(text.text);
+        });
+
+        const typingStatusBar = document.getElementById("typingStatus");
+
+        socket.on('typing', (username) => {
+            typingStatusBar.innerHTML = `${username} typing...`;
+        })
+
+        socket.on('typingStopped', (username) => {
+            // if (typingStatusBar.value == `${username} typing...`)
+                typingStatusBar.innerHTML = '';
+        })
 
         socket.on('previousMessages', (messages) => {
             messages.forEach(message => {
@@ -487,7 +563,7 @@ complete the script tag code. -->
             console.log(onlineUsers)
             onlineUsersDiv.innerHTML = '';
             onlineUsers.forEach(user => {
-                showOnlineUser({username : user.username, joinedSince: user.joinedSince })
+                showOnlineUser({ username: user.username, joinedSince: user.joinedSince })
             })
             noOfOnlineUsersSpace.innerHTML = `(${onlineUsers.length})`;
         })

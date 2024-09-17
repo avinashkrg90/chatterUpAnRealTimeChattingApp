@@ -29,7 +29,7 @@ io.on("connection", (socket) => {
 
         // Broadcast a message to all other users in the same room
         socket.broadcast.to(data.room).emit("notification", {
-            text: `${data.username} has joined the room.`
+            text: `${data.username} has joined the chat room.`
         });
 
         // Join the room
@@ -55,8 +55,6 @@ io.on("connection", (socket) => {
         } catch (err) {
             console.log(err)
         }
-
-        // console.log(data.file)
     });
 
     socket.on("sendMsg", async ({ msg, room }) => {
@@ -73,17 +71,25 @@ io.on("connection", (socket) => {
         socket.to(room).emit("message", message);
     });
 
+    socket.on("typing", async ({username, room}) => {
+        socket.broadcast.to(room).emit("typing", username);
+    });
+
+    socket.on("typingStopped", async ({username, room}) => {
+        socket.broadcast.to(room).emit("typingStopped", username);
+    });
+
     socket.on("disconnect", async () => {
         const leavedUser = await onlineUserModel.findOne({username:socket.username});
-        console.log(leavedUser)
         let room = '';
         if (leavedUser)
             room = leavedUser.room;
-        console.log(room)
         await onlineUserModel.findOneAndDelete({username:socket.username});
         const onlineUsersInRoom = await onlineUserModel.find({room});
-        console.log(onlineUsersInRoom);
         io.to(room).emit("listOfOnlineUsers", onlineUsersInRoom);
+        socket.broadcast.to(room).emit("notification", {
+            text: `${socket.username} has left the chat room.`
+        });
         console.log("Connection disconnected.");
     });
 });
