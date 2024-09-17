@@ -21,10 +21,10 @@ complete the script tag code. -->
 
         #chatterUp-app {
             width: 100%;
-            max-width: 650px;
+            max-width: 800px;
             min-height: 85vh;
             background: #f8effd;
-            margin: 50px auto 50px;
+            margin: 20px auto 50px;
             border-radius: 10px;
             position: relative;
         }
@@ -39,24 +39,24 @@ complete the script tag code. -->
             font-size: 16px;
         }
 
-        #loginProfilePic{
+        #loginProfilePic {
             margin-bottom: 30px;
             position: relative;
         }
 
-        #loginProfilePic input{
+        #loginProfilePic input {
             width: 6vh;
             height: 6vh;
             border-radius: 50%;
-            position:absolute;
+            position: absolute;
             bottom: 1vh;
             right: 4.5vh;
             opacity: 0;
             border: 2px solid black;
         }
 
-        #loginProfilePic label{
-            position:absolute;
+        #loginProfilePic label {
+            position: absolute;
             bottom: 1vh;
             right: 4.5vh;
             color: black;
@@ -70,12 +70,12 @@ complete the script tag code. -->
             line-height: 55px;
         }
 
-        #loginProfilePic input:hover{
+        #loginProfilePic input:hover {
             cursor: pointer;
         }
 
 
-        #loginProfilePic img{
+        #loginProfilePic img {
             width: 15vh;
             height: 15vh;
             border-radius: 50%;
@@ -136,11 +136,21 @@ complete the script tag code. -->
             background: linear-gradient(180deg, #f88484, #ee780a);
         }
 
-        #notificationDiv {
-            color: #b90d1b;
-            font-weight: 200;
-            line-height: 18px;
-            font-size: 18px;
+        /* #headerProfilePic{
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+        } */
+
+        #headerProfilePic img{
+            width: 7vh;
+            height: 7vh;
+            border-radius: 50%;
+        }
+
+        #msgAndUsers-container{
+            display: flex;
+            justify-content: space-between;
         }
 
         #message-container {
@@ -149,13 +159,62 @@ complete the script tag code. -->
             overflow-y: auto;
             /* overflow-anchor: none; */
             -ms-overflow-style: none;
-            scrollbar-width: none; 
+            scrollbar-width: none;
             /* scroll-snap-align: end; */
+            /* display: flex; */
+            justify-content: space-between;
+            box-shadow: inset #b9a5eb 00px -20px 50px -15px; 
+        }
+
+        #onlineUsers-container {
+            width: 200px;
+            border-left: 2px solid #b9a5eb;
+            box-shadow: inset #b9a5eb 20px 00px 50px -15px; 
+            padding: 5px 15px;
+        }
+
+        #headerOnlineUsers{
+            color:#59156a;
+            font-size: 16px;
+            padding: 5px 15px;
+        }
+
+        #headerOnlineUsers p span{
+            color:#000000;
+            font-size: 16px;
+        }
+        /* noOfOnlineUsers */
+
+        #listOfOnlineUsers{
+            display: flex;
+            flex-direction: column;
+        }
+
+        #listOfOnlineUsers div{
+            font-size: 15px;
+        }
+
+        #listOfOnlineUsers div::before{
+            content: '';
+            transform: translateY(10%);
+            width: 15px;
+            height: 15px;
+            background-color: #15f13d;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .loginSinceTime{
+            color: rgb(60, 120, 122);
+            font-size: 12px;
+            margin-left: 5px;
         }
 
         #message-area {
+            width: 600px;
             display: flex;
-            flex-direction:column;
+            flex-direction: column;
             justify-content: flex-end;
             padding: 0px 15px;
             /* scroll-snap-align: end; */
@@ -251,7 +310,7 @@ complete the script tag code. -->
             box-shadow: 0px 5px 5px rgb(121, 122, 122);
         }
 
-        .profilePic img{
+        .profilePic img {
             height: 45px;
             width: 45px;
             border-radius: 50%;
@@ -266,7 +325,7 @@ complete the script tag code. -->
                 <div id="loginProfilePic">
                     <img id="loginImg" src="./public/profilePics/pp1.jpg" alt="no image found">
                     <label for="picInput">+</label>
-                    <input id="picInput" type="file" onChange="selectFile()"  accept="image/png, image/jpeg">
+                    <input id="picInput" type="file" onChange="selectFile()" accept="image/png, image/jpeg">
                     <!-- <button id="addPicBtn"><h3>+</h3></button> -->
                 </div>
                 <form id="login-form">
@@ -278,35 +337,48 @@ complete the script tag code. -->
                 </form>
             </div>
             <div id="main-container">
-                <div id="header">
-                    <h2>ChatterUp</h2>
-                    <div id="notificationDiv">
-                        <h4>4 users online</h4>
-                    </div>
-                </div>
-
-                <div id="message-container">
-                    <div id="message-area">
-                        
-                        <!-- <div class="inMessage-container">
-                            <div class="profilePic"><img src="./public/profilePics/pp2.jpg" alt="ProfilePic2"></div>
-                            <div class="inMessage">Hello, Hi.... HOw you</div>
+                <div>
+                    <div id="header">
+                        <h2>ChatterUp</h2>
+                        <div id="headerProfilePic">
+                            <img id="headerPicImg" src="./public/profilePics/pp1.jpg" alt="no image found">
                         </div>
-                        <div class="outMessage-container">
-                            <div class="profilePic"><img src="./public/profilePics/pp1.jpg" alt="ProfilePic1"></div>
-                            <div class="outMessage">Hello, Hi.... HOw are you HOw are you man. Itsu. Hello, Hi.... HOw are
-                                you man. Its been long seeiman. Itsu. Hello, Hi.... HOw are you man. Its been long
-                                seeing you
-                            </div>
-                        </div> -->
                     </div>
-                </div>
-                <div id="messageForm-area">
-                    <!-- Create a form to add new tasks -->
-                    <form id="sendMessage-form">
-                        <input type="text" id="message-input" placeholder="enter your message" required>
-                        <button id="sendMessage-btn" type="submit">Send</button>
-                    </form>
+
+                    <div id="msgAndUsers-container">
+                        <div id="message-container">
+                            <div id="message-area">
+
+                                <!-- <div class="inMessage-container">
+                                <div class="profilePic"><img src="./public/profilePics/pp2.jpg" alt="ProfilePic2"></div>
+                                <div class="inMessage">Hello, Hi.... HOw you</div>
+                            </div>
+                            <div class="outMessage-container">
+                                <div class="profilePic"><img src="./public/profilePics/pp1.jpg" alt="ProfilePic1"></div>
+                                <div class="outMessage">Hello, Hi.... HOw are you HOw are you man. Itsu. Hello, Hi.... HOw are
+                                    you man. Its been long seeiman. Itsu. Hello, Hi.... HOw are you man. Its been long
+                                    seeing you
+                                </div>
+                            </div> -->
+                            </div>
+                        </div>
+                        <div id="onlineUsers-container">
+                            <div id="headerOnlineUsers">
+                                <p>Online users <span id="noOfOnlineUsers"></span></p>
+                            </div>
+                            <div id="listOfOnlineUsers">
+                                <div>Aviansh <span class="loginSinceTime">(since 4h30m)</span></div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div id="messageForm-area">
+                        <!-- Create a form to add new tasks -->
+                        <form id="sendMessage-form">
+                            <input type="text" id="message-input" placeholder="enter your message" required>
+                            <button id="sendMessage-btn" type="submit">Send</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -317,9 +389,9 @@ complete the script tag code. -->
         const socket = io.connect('http://localhost:3100');
 
         let file = '';
-        const imgDiv = document.getElementById("loginImg");
+        const imgDiv = document.getElementById('loginImg');
 
-        function selectFile(){
+        function selectFile() {
             console.log(document.getElementById("picInput").files[0].name);
             file = document.getElementById("picInput").files[0];
             imgDiv.src = URL.createObjectURL(file);
@@ -329,6 +401,7 @@ complete the script tag code. -->
         let room = '';
         const loginContainer = document.getElementById("login-container");
         const chatContainer = document.getElementById("main-container");
+        const headerProfilePic = document.getElementById("headerPicImg");
 
         // Event handler for the login form
         document.getElementById('login-form').addEventListener('submit', (e) => {
@@ -343,7 +416,9 @@ complete the script tag code. -->
             // Join the room by emitting a 'join' event
             // console.log("username: " + username +"  and room id is : "+ room)
             // socket.emit('profilePicUpdate', {file, username})
-            socket.emit('join', {username, room});
+            if(file)
+                headerProfilePic.src = URL.createObjectURL(file);
+            socket.emit('join', { username, room });
         });
 
         // -------------------write your code here.--------------------
@@ -356,7 +431,7 @@ complete the script tag code. -->
             messageOut.classList.add(`outMessage-container`);
             messageOut.innerHTML =
                 `
-                    <div class="profilePic"><img src="${file ? URL.createObjectURL(file): './public/profilePics/pp1.jpg'}" alt="ProfilePic1"></div>
+                    <div class="profilePic"><img src="${file ? URL.createObjectURL(file) : './public/profilePics/pp1.jpg'}" alt="ProfilePic1"></div>
                     <div class="outMessage">${msg.text}</div>
                 `;
             messageList.appendChild(messageOut);
@@ -373,12 +448,26 @@ complete the script tag code. -->
             messageList.appendChild(messageIn);
         }
 
+        let onlineUsersDiv = document.getElementById("listOfOnlineUsers");
+        let noOfOnlineUsersSpace = document.getElementById("noOfOnlineUsers");
+    
+        function showOnlineUser(onlineUserData) {
+            console.log(onlineUserData)
+            const now = new Date(onlineUserData.joinedSince);
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            console.log(hours+ ":"+minutes)
+            let onlineUser = document.createElement('div');
+            onlineUser.innerHTML = `${onlineUserData.username} <span class="loginSinceTime">(since ${hours}:${minutes})</span>`;
+            onlineUsersDiv.appendChild(onlineUser);
+        }
+
         sendMessageForm.addEventListener('submit', (event) => {
             event.preventDefault();
             const msg = messageInput.value;
-            socket.emit('sendMsg', {msg, room});
+            socket.emit('sendMsg', { msg, room });
             messageInput.value = '';
-            addOutMsg({username, text:msg, room, timeStamp:Date.now});
+            addOutMsg({ username, text: msg, room, timeStamp: Date.now });
         });
 
         socket.on('message', (message) => {
@@ -394,10 +483,13 @@ complete the script tag code. -->
             });
         });
 
-        socket.on('listOfOnlineUsers', (onlineUsers)=>{
-            onlineUsers.forEach(user =>{
-                console.log(user.username);
+        socket.on('listOfOnlineUsers', (onlineUsers) => {
+            console.log(onlineUsers)
+            onlineUsersDiv.innerHTML = '';
+            onlineUsers.forEach(user => {
+                showOnlineUser({username : user.username, joinedSince: user.joinedSince })
             })
+            noOfOnlineUsersSpace.innerHTML = `(${onlineUsers.length})`;
         })
     </script>
 </body>
