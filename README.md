@@ -1,4 +1,4 @@
 # Screenshots
-![App Screenshot]("./public/profilePics/chatterUpScreenshot.png")
+![App Screenshot]("public/profilePics/chatterUpScreenshot.png")
 
 # Deployment
